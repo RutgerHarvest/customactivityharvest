@@ -11,7 +11,7 @@ var express = require('express')
 
 var app = express();
 
-app.configure(function(){
+
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
@@ -27,11 +27,8 @@ app.configure(function(){
   });
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
-});
-
-app.configure('development', function(){
   app.use(express.errorHandler());
-});
+
 
 app.all('/et/save', et.save);
 app.all('/et/publish', et.publish);
