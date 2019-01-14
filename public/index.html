@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Custom Activity Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/js/postmonger.js"></script>
+    <!-- <script src="main.js"></script> -->
+    <script>
+
+ var connection = new Postmonger.Session();
+    var authTokens = {};
+    var payload = {};
+    $(window).ready(onRender);
+
+    connection.on('initActivity', initialize);
+    connection.on('requestedTokens', onGetTokens);
+    connection.on('requestedEndpoints', onGetEndpoints);
+
+    connection.on('clickedNext', save);
+   
+    function onRender() {
+        // JB will respond the first time 'ready' is called with 'initActivity'
+        connection.trigger('ready');
+
+        connection.trigger('requestTokens');
+        connection.trigger('requestEndpoints');
+
+    }
+
+    function initialize(data) {
+        if (data) {
+            payload = data;
+        }
+        
+        var hasInArguments = Boolean(
+            payload['arguments'] &&
+            payload['arguments'].execute &&
+            payload['arguments'].execute.inArguments &&
+            payload['arguments'].execute.inArguments.length > 0
+        );
+
+        var inArguments = hasInArguments ? payload['arguments'].execute.inArguments : {};
+
+
+        $.each(inArguments, function (index, inArgument) {
+            $.each(inArgument, function (key, val) {
+                
+              
+            });
+        });
+
+        connection.trigger('updateButton', {
+            button: 'next',
+            text: 'done',
+            visible: true
+        });
+    }
+
+    function onGetTokens(tokens) {
+        authTokens = tokens;
+    }
+
+    function onGetEndpoints(endpoints) {
+    }
+
+    function save() {
+        var postcardURLValue = $('#postcard-url').val();
+        var postcardTextValue = $('#postcard-text').val();
+
+        payload['arguments'].execute.inArguments = [{
+            "tokens": authTokens,
+            "emailAddress": "{{Contact.Attribute.PostcardJourney.EmailAddress}}"
+        }];
+        
+        payload['metaData'].isConfigured = true;
+
+        connection.trigger('updateActivity', payload);
+    }
+
+    </script>
+</head>
+<body>
+    <body class="fuelux">
+        <div id="step1" class="step container">
+        <h4 class="section" style="margin-top:20px;">Custom Activity Webhook Harvest Digital</h4>
+        <hr class="darker"/>
+        <div class="form-group">
+                Custom Activity Webhook (Harvest) allows you to post the data that triggered the Journey to external systems.  The data is posted to the supplied Webhook URL in JSON format.
+        </div>
+        </div>
+        <!--
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="https://www.fuelcdn.com/fuelux/3.11.0/js/fuelux.min.js"></script>
+        -->
+</body>
+</body>
+</html>
