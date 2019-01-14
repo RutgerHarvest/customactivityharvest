@@ -7,7 +7,8 @@ var express = require('express')
   , routes = require('./routes')
   , http = require('http')
   , et = require('./routes/et')
-  , path = require('path');
+  , path = require('path')
+  , favicon = require('serve-favicon');
 
 var app = express();
 
@@ -19,6 +20,7 @@ var app = express();
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
   app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT ,DELETE');
